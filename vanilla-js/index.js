@@ -6,6 +6,6 @@ const inputEl = /** @type {HTMLInputElement} */ (
   document.querySelector("#phone")
 );
 
-inputEl.addEventListener("keydown", (e) => {
+inputEl.addEventListener("input", (e) => {
   handleTelInputFormatting(e);
 });
