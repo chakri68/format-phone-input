@@ -33,10 +33,9 @@ export function isValidDigit(char) {
 /**
  * Formats a telephone number string.
  * @param {string} tel
- * @param {number} cursorPos
  * @returns {string}
  */
-export function formatTel(tel, cursorPos) {
+export function formatTel(tel) {
   let res = "";
   for (let i of tel) {
     if (isValidDigit(i)) {
@@ -55,10 +54,22 @@ export function formatTel(tel, cursorPos) {
  */
 export function handleTelInputFormatting(e) {
   const inputEl = /** @type {HTMLInputElement} */ (e.currentTarget);
-  const prevSelEnd = inputEl.selectionEnd;
-  const formattedTel = formatTel(inputEl.value, prevSelEnd);
-  const cursorDiff = formattedTel.length - inputEl.value.length;
-  const newSelEnd = prevSelEnd + cursorDiff;
+  let prevCount = 0;
+  const selEnd = inputEl.selectionEnd;
+  for (let char of inputEl.value.slice(0, selEnd)) {
+    if (isValidDigit(char)) {
+      prevCount += 1;
+    }
+  }
+  const formattedTel = formatTel(inputEl.value);
+  let reqInd = 0;
+  for (let char of formattedTel) {
+    if (isValidDigit(char)) {
+      if (prevCount <= 0) break;
+      prevCount -= 1;
+    }
+    reqInd += 1;
+  }
   inputEl.value = formattedTel;
-  inputEl.setSelectionRange(newSelEnd, newSelEnd);
+  inputEl.selectionEnd = reqInd;
 }
